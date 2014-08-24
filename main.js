@@ -16,10 +16,8 @@ module.exports = function() {
   var toolbarTemplate = require("./templates/toolbar.hbs");
   var GithubToolbar = hbs.compile(toolbarTemplate);
 
-  console.log("komanda-github-toolbar");
-
   return {
-    initialize: function(args) {
+    initialize: function (args) {
       var self = this;
       if (_.has(args, "channelAPI")) {
         self.channelAPI = args.channelAPI;
@@ -38,7 +36,7 @@ module.exports = function() {
       });
     },
 
-    consumeTopic: function(topic) {
+    consumeTopic: function (topic) {
       var self = this;
       self.topic = topic;
 
@@ -67,13 +65,13 @@ module.exports = function() {
           }
 
           return;
-          }
         }
+      }
 
-        self.channelAPI.removeToolbar();
+      self.channelAPI.removeToolbar();
     },
 
-    pluginToolbar: function(repo) {
+    pluginToolbar: function (repo) {
       var self = this;
 
       var params = {
@@ -92,11 +90,8 @@ module.exports = function() {
       self.channelAPI.setToolbar(html);
     },
 
-    updateAndRender: function(callback, errorback) {
+    updateAndRender: function () {
       var self = this;
-
-      if (!_.isFunction(callback)) callback = _.noop;
-      if (!_.isFunction(errorback)) errorback = _.noop;
 
       Promise.resolve($.ajax({
         url: self.metadataURL,
@@ -104,7 +99,7 @@ module.exports = function() {
         type: "get",
         ifModified: true
       }))
-      .then(function(metadata) {
+      .then(function (metadata) {
         if (metadata && !_.isEmpty(metadata)) {
           self.repo.metadata = metadata;
           self.pluginToolbar(self.repo);
@@ -112,11 +107,12 @@ module.exports = function() {
 
         return self.repo;
       })
-      .catch(errorback)
-      .then(callback);
+      .catch(function (error) {
+        
+      });
     },
 
-    close: function() {
+    close: function () {
       var self = this;
 
       // if (self.githubUpdateCheck) clearInterval(self.githubUpdateCheck);
